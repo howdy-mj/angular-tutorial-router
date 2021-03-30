@@ -30,7 +30,7 @@ export class CrisisDetailResolverService implements Resolve<Crisis> {
         } else {
           // id에 해당하는 데이터가 없는 경우
           this.router.navigate(['/crisis-center']);
-          return EMPTY
+          return EMPTY;
         }
       })
     )

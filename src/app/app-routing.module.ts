@@ -5,11 +5,29 @@ import { RouterModule, Routes } from '@angular/router'
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { ComposeMessageComponent } from './compose-message/compose-message.component';
 
+import { AuthGuard } from './auth/auth.guard';
+
+import { SelectivePreloadingStrategyService } from './selective-preloading-strategy.service';
+
 
 const appRoutes: Routes = [
-  { path: '', redirectTo: '/heroes', pathMatch: 'full' },
+  {
+    path: 'compose',
+    component: ComposeMessageComponent,
+    outlet: 'popup'
+  },
+  {
+    path: 'admin',
+    loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
+    canLoad: [AuthGuard]
+  },
+  {
+    path: 'crisis-center',
+    loadChildren: () => import('./crisis-center/crisis-center.module').then(m => m.CrisisCenterModule),
+    data: { preload: true }
+  },
+  { path: '', redirectTo: '/superheroes', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent },
-  { path: 'compose', component: ComposeMessageComponent, outlet: 'popup' }
 ]
 
 @NgModule({
@@ -18,7 +36,10 @@ const appRoutes: Routes = [
     CommonModule,
     RouterModule.forRoot(
       appRoutes,
-      { enableTracing: true } // debugging
+      {
+        enableTracing: true, // debugging
+        preloadingStrategy: SelectivePreloadingStrategyService
+      },
     ),
   ],
   exports: [

@@ -19,22 +19,23 @@ export class LoginComponent implements OnInit {
   }
 
   setMessage() {
-    this.message = 'Logged' + (this.authService.isLoggedIn ? 'in' : 'out')
+    this.message = 'Logged ' + (this.authService.isLoggedIn ? 'in' : 'out')
   }
 
   login() {
     this.message = 'Trying to log in...'
 
-    // 전역 쿼리 파라미터와 프래그먼트를 NavigationExtras 객체타입으로 전달합니다.
-    const navigationExtras: NavigationExtras = {
-      queryParamsHandling: 'preserve',
-      preserveFragment: true
-    };
-
     this.authService.login().subscribe(() => {
       this.setMessage();
       if (this.authService.isLoggedIn) {
         const redirectUrl = '/admin'
+
+        // 전역 쿼리 파라미터와 프래그먼트를 NavigationExtras 객체타입으로 전달합니다.
+        const navigationExtras: NavigationExtras = {
+          queryParamsHandling: 'preserve',
+          preserveFragment: true
+        };
+
         this.router.navigate([redirectUrl], navigationExtras)
       }
     })

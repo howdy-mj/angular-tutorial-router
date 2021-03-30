@@ -16,7 +16,7 @@ export class HeroListComponent implements OnInit {
 
 
   constructor(
-    private heroService: HeroService,
+    private service: HeroService,
     private route: ActivatedRoute
   ) { }
 
@@ -25,7 +25,7 @@ export class HeroListComponent implements OnInit {
     this.heroes$ = this.route.paramMap.pipe(
       switchMap(params => {
         this.selectedId = +params.get('id');
-        return this.heroService.getHeroes();
+        return this.service.getHeroes();
       })
     )
   }

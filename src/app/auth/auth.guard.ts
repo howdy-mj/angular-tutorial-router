@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router, CanActivateChild, NavigationExtras } from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router, CanActivateChild, NavigationExtras, CanLoad, Route } from '@angular/router';
 // import { Observable } from 'rxjs';
 
 import { AuthService } from './auth.service';
@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard implements CanActivate, CanActivateChild {
+export class AuthGuard implements CanActivate, CanActivateChild, CanLoad {
   constructor(
     private authService: AuthService,
     private router: Router
@@ -23,7 +23,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 
   canActivate(
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): true|UrlTree {
+    state: RouterStateSnapshot): boolean {
     const url: string = state.url;
 
     return this.checkLogin(url);
@@ -31,12 +31,17 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 
   canActivateChild(
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): true|UrlTree {
+    state: RouterStateSnapshot): boolean {
     return this.canActivate(route, state);
   }
 
-  checkLogin(url: string): true|UrlTree {
-    if (this.authService.isLoggedIn) { return true}
+  canLoad(route: Route): boolean {
+    const url = `/${route.path}`;
+    return this.checkLogin(url);
+  }
+
+  checkLogin(url: string): boolean {
+    if (this.authService.isLoggedIn) { return true }
 
     this.authService.redirectUrl = url; // login 후 리다이렉트 할 url 저장
 
@@ -47,7 +52,9 @@ export class AuthGuard implements CanActivate, CanActivateChild {
       fragment: 'anchor'
     }
 
-    return this.router.parseUrl('/login')
+    this.router.navigate(['/login'], navigationExtras);
+    return false;
   }
+
 
 }

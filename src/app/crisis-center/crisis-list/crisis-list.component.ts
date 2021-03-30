@@ -15,9 +15,8 @@ export class CrisisListComponent implements OnInit {
   crises$: Observable<Crisis[]>;
   selectedId: number;
 
-
   constructor(
-    private heroService: CrisisService,
+    private service: CrisisService,
     private route: ActivatedRoute
   ) { }
 
@@ -25,7 +24,7 @@ export class CrisisListComponent implements OnInit {
     this.crises$ = this.route.paramMap.pipe(
       switchMap(params => {
         this.selectedId = +params.get('id');
-        return this.heroService.getCrises();
+        return this.service.getCrises();
       })
     )
   }
