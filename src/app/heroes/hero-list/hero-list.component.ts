@@ -5,8 +5,6 @@ import { switchMap } from 'rxjs/operators';
 
 import { Hero } from '../hero';
 import { HeroService } from '../hero.service';
-import { MessageService } from '../../message.service';
-
 @Component({
   selector: 'app-hero-list',
   templateUrl: './hero-list.component.html',
